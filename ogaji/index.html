@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sia&co</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #000;
+            --secondary: #fff;
+            --light-gray: #f5f5f5;
+            --text: #333;
+            --light-text: #666;
+            --border: #e5e5e5;
+            --accent: #c2185b;
+            --soft-pink: #fce4ec;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--secondary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== ANNOUNCEMENT BAR ===== */
+        .announcement-bar {
+            background: var(--primary);
+            color: var(--secondary);
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1001;
+        }
+
+        .announcement-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+        }
+
+        .announcement-scroll {
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            padding: 0 15px;
+        }
+
+        .announcement-scroll-inner {
+            display: inline-block;
+            animation: scrollText 15s linear infinite;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .announcement-scroll-inner span {
+            margin: 0 30px;
+        }
+
+        .announcement-newsletter {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            border-left: 1px solid rgba(255,255,255,0.2);
+            padding-left: 15px;
+            padding-right: 50px;
+            flex-shrink: 0;
+        }
+
+        .announcement-newsletter svg {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+        }
+
+        .announcement-newsletter span {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .announcement-close {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-size: 22px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: var(--secondary);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            margin-left: -10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .menu-btn span {
+            display: block;
+            width: 22px;
+            height: 1.5px;
+            background: var(--primary);
+            transition: all 0.3s;
+        }
+
+        .header-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-logo img {
+            height: 36px;
+            width: auto;
+        }
+
+        .header-logo-text {
+            font-family: 'Inter', serif;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 4px;
+            color: var(--primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            position: relative;
+        }
+
+        .header-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--primary);
+            fill: none;
+            stroke-width: 1.8;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--accent);
+            color: var(--secondary);
+            font-size: 9px;
+            font-weight: 600;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== HERO SLIDER ===== */
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 104px);
+            min-height: 500px;
+            overflow: hidden;
+        }
+
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .hero-slide.active {
+            opacity: 1;
+        }
+
+        .hero-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--secondary);
+            padding: 20px;
+        }
+
+        .hero-title {
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            max-width: 300px;
+            line-height: 1.5;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: var(--secondary);
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hero-btn:hover {
+            background: var(--accent);
+            color: var(--secondary);
+        }
+
+        /* Slider Arrows */
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.8);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.3s;
+        }
+
+        .slider-arrow:hover {
+            background: var(--secondary);
+        }
+
+        .slider-arrow svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--primary);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .slider-arrow.prev { left: 15px; }
+        .slider-arrow.next { right: 15px; }
+
+        /* Slider Dots */
+        .slider-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .slider-dot.active {
+            background: var(--secondary);
+            transform: scale(1.2);
+        }
+
+        /* ===== SIDE MENU ===== */
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 85%;
+            max-width: 360px;
+            height: 100vh;
+            background: var(--secondary);
+            z-index: 2001;
+            transform: translateX(-100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .side-menu.active {
+            transform: translateX(0);
+        }
+
+        .side-menu-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px;
+        }
+
+        .side-menu-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .side-menu-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin: 0 20px;
+        }
+
+        .side-menu-tab {
+            flex: 1;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--light-text);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .side-menu-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--accent);
+            background: var(--soft-pink);
+        }
+
+        .side-menu-content {
+            padding: 10px 0;
+        }
+
+        .side-menu-list {
+            list-style: none;
+            display: none;
+        }
+
+        .side-menu-list.active {
+            display: block;
+        }
+
+        .side-menu-list li {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .side-menu-list a {
+            display: block;
+            padding: 18px 25px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+
+        .side-menu-list a:hover {
+            background: var(--soft-pink);
+            color: var(--accent);
+        }
+
+        .menu-category-label {
+            padding: 10px 25px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: var(--soft-pink);
+            margin-top: 5px;
+        }
+
+        /* ===== FLOATING EMAIL BUTTON ===== */
+        .email-float {
+            position: fixed;
+            bottom: 25px;
+            right: 20px;
+            z-index: 999;
+        }
+
+        .email-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            background: var(--accent);
+            color: var(--secondary);
+            border-radius: 50%;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(194, 24, 91, 0.4);
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .email-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .email-btn svg {
+            width: 26px;
+            height: 26px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+        }
+
+        /* Pulsing ring animation */
+        .email-btn::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            border: 2px solid rgba(194, 24, 91, 0.3);
+            animation: pulseRing 2s ease-out infinite;
+        }
+
+        .email-btn::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid rgba(194, 24, 91, 0.2);
+            animation: pulseRing 2s ease-out 0.5s infinite;
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: var(--light-text);
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        /* Categories Grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            position: relative;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .category-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+
+        .category-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .category-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .category-card:hover .category-overlay {
+            background: rgba(0,0,0,0.5);
+        }
+
+        .category-name {
+            color: var(--secondary);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        /* Products */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: var(--secondary);
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .product-image {
+            position: relative;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            background: var(--light-gray);
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--accent);
+            color: var(--secondary);
+            padding: 4px 12px;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 500;
+            border-radius: 2px;
+        }
+
+        .product-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .product-name {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .product-price {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .product-price .old {
+            text-decoration: line-through;
+            color: var(--light-text);
+            font-weight: 400;
+            margin-left: 8px;
+            font-size: 13px;
+        }
+
+        /* Newsletter Section */
+        .newsletter-section {
+            background: var(--primary);
+            color: var(--secondary);
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .newsletter-section h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .newsletter-section p {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        .newsletter-form {
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: var(--secondary);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .newsletter-form input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .newsletter-form button {
+            padding: 14px 24px;
+            background: var(--accent);
+            color: var(--secondary);
+            border: none;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            background: #ad1457;
+        }
+
+        /* Footer */
+        footer {
+            background: #111;
+            color: var(--secondary);
+            padding: 50px 20px 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 25px;
+            text-align: center;
+            font-size: 11px;
+            opacity: 0.4;
+            letter-spacing: 1px;
+        }
+
+        /* Desktop adjustments */
+        @media (min-width: 768px) {
+            .hero-title {
+                font-size: 52px;
+            }
+            .hero-subtitle {
+                font-size: 18px;
+                max-width: 500px;
+            }
+            .categories-grid {
+                grid-template-columns: repeat(3, 1fr);
+                max-width: 900px;
+            }
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 1100px;
+            }
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 1000px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .hero-slider {
+                height: calc(100vh - 104px);
+            }
+            .header {
+                padding: 0 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Announcement Bar -->
+    <div class="announcement-bar" id="announcementBar">
+        <div class="announcement-content">
+            <div class="announcement-scroll">
+                <div class="announcement-scroll-inner">
+                    <span>✨ New Summer Collection Just Dropped — Shop Now</span>
+                    <span>Free Shipping on Orders Over $150</span>
+                    <span>✨ New Summer Collection Just Dropped — Shop Now</span>
+                    <span>Free Shipping on Orders Over $150</span>
+                    <span>✨ New Summer Collection Just Dropped — Shop Now</span>
+                    <span>Free Shipping on Orders Over $150</span>
+                </div>
+            </div>
+            <div class="announcement-newsletter">
+                <svg viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <span>Newsletter</span>
+            </div>
+        </div>
+        <button class="announcement-close" onclick="closeAnnouncement()">&times;</button>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-btn" onclick="openMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div class="header-logo">
+            <img src="sia.jpg" alt="Sia Logo">
+            <span class="header-logo-text">SIA</span>
+        </div>
+        <div class="header-right">
+            <button class="header-icon">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </button>
+            <button class="header-icon" style="position: relative;">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                <span class="cart-count">0</span>
+            </button>
+        </div>
+    </header> 
+
+    <!-- Hero Slider -->
+    <section class="hero-slider" id="heroSlider">
+        <div class="hero-slide active">
+            <img src="bodycon.webp" alt="Sia Fashion">
+            <div class="hero-overlay">
+                <h1 class="hero-title">Shop Now!</h1>
+                <p class="hero-subtitle">New Arrivals Are Live — Shop the Latest Women's Styles</p>
+                <a href="#categories" class="hero-btn">Shop Now</a>
+            </div>
+        </div>
+        <div class="hero-slide">
+            <img src="abaya.jpeg" alt="Sia Collection">
+            <div class="hero-overlay">
+                <h1 class="hero-title">Shop Now!</h1>
+                <p class="hero-subtitle">Discover What's New In Store for Her</p>
+                <a href="#categories" class="hero-btn">Shop Now</a>
+            </div>
+        </div>
+        <div class="hero-slide">
+            <img src="bag.webp" alt="Sia New Arrivals">
+            <div class="hero-overlay">
+                <h1 class="hero-title">Shop Now!</h1>
+                <p class="hero-subtitle">Serving Fresh Looks — Shop Our Latest Women's Arrivals</p>
+                <a href="#categories" class="hero-btn">Shop Now</a>
+            </div>
+        </div>
+
+        <button class="slider-arrow prev" onclick="changeSlide(-1)">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-arrow next" onclick="changeSlide(1)">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <div class="slider-dots">
+            <button class="slider-dot active" onclick="goToSlide(0)"></button>
+            <button class="slider-dot" onclick="goToSlide(1)"></button>
+            <button class="slider-dot" onclick="goToSlide(2)"></button>
+        </div>
+    </section>
+
+    <!-- Side Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+    <!-- Side Menu -->
+    <nav class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <button class="side-menu-close" onclick="closeMenu()">&times;</button>
+        </div>
+        <div class="side-menu-tabs">
+            <button class="side-menu-tab active" onclick="switchTab('menu')">Menu</button>
+            <button class="side-menu-tab" onclick="switchTab('categories')">Categories</button>
+        </div>
+        <div class="side-menu-content">
+            <ul class="side-menu-list active" id="menuTab">
+                <li><a href="#" onclick="closeMenu()">Home</a></li>
+                <li><a href="#categories" onclick="closeMenu()">Shop All</a></li>
+                <li><a href="#new-arrivals" onclick="closeMenu()">New Arrivals</a></li>
+                <li><a href="#best-sellers" onclick="closeMenu()">Best Sellers</a></li>
+                <li><a href="#sale" onclick="closeMenu()">Sale</a></li>
+                <li><a href="#" onclick="closeMenu()">Login / Register</a></li>
+                <li><a href="#" onclick="closeMenu()">My Wishlist</a></li>
+                <li><a href="#" onclick="closeMenu()">My Orders</a></li>
+                <li><a href="#" onclick="closeMenu()">Account Settings</a></li>
+            </ul>
+            <ul class="side-menu-list" id="categoriesTab">
+                <li class="menu-category-label">Clothing</li>
+                <li><a href="#" onclick="closeMenu()">Dresses</a></li>
+                <li><a href="#" onclick="closeMenu()">Two-Piece Sets</a></li>
+                <li><a href="#" onclick="closeMenu()">Bodycon Dresses</a></li>
+                <li><a href="#" onclick="closeMenu()">Imani Abaya</a></li>
+                <li><a href="#" onclick="closeMenu()">Blazers</a></li>
+                <li><a href="#" onclick="closeMenu()">Pants & Trousers</a></li>
+                <li><a href="#" onclick="closeMenu()">Skirts</a></li>
+                <li class="menu-category-label">Accessories</li>
+                <li><a href="#" onclick="closeMenu()">Bags & Purses</a></li>
+                <li><a href="#" onclick="closeMenu()">Jewelry</a></li>
+                <li class="menu-category-label">Beauty</li>
+                <li><a href="#" onclick="closeMenu()">Skincare</a></li>
+                <li><a href="#" onclick="closeMenu()">Makeup</a></li>
+                <li><a href="#" onclick="closeMenu()">Fragrance</a></li>
+                <li><a href="#" onclick="closeMenu()">Hair Care</a></li>
+                <li><a href="#" onclick="closeMenu()">Nail Care</a></li>
+                <li class="menu-category-label">Collections</li>
+                <li><a href="#" onclick="closeMenu()">Summer Collection</a></li>
+                <li><a href="#" onclick="closeMenu()">Wedding Edit</a></li>
+                <li><a href="#" onclick="closeMenu()">Workwear</a></li>
+                <li><a href="#" onclick="closeMenu()">Casual Chic</a></li>
+                <li><a href="#" onclick="closeMenu()">Date Night</a></li>
+                <li><a href="#" onclick="closeMenu()">Vacation Mode</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Categories Section -->
+    <section class="section" id="categories">
+        <div class="section-title">
+            <h2>Shop by Category</h2>
+            <p>Curated collections for every occasion</p>
+        </div>
+        <div class="categories-grid">
+            <div class="category-card">
+                <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&q=80" alt="Two Pieces">
+                <div class="category-overlay">
+                    <div class="category-name">Two Pieces</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="dresses.jpg" alt="Dresses">
+                <div class="category-overlay">
+                    <div class="category-name">Dresses</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&q=80" alt="Bags">
+                <div class="category-overlay">
+                    <div class="category-name">Bags</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=400&q=80" alt="Bodycon Dresses">
+                <div class="category-overlay">
+                    <div class="category-name">Bodycon Dresses</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="blazers.webp" alt="Blazers">
+                <div class="category-overlay">
+                    <div class="category-name">Blazers</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="pants.webp" alt="Pants">
+                <div class="category-overlay">
+                    <div class="category-name">Pants</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="abaya1.webp" alt="Imani Abaya">
+                <div class="category-overlay">
+                    <div class="category-name">Imani Abaya</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="abaya2.jpg" alt="Abaya">
+                <div class="category-overlay">
+                    <div class="category-name">Abaya</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="pants1.webp" alt="Wide Leg Silk">
+                <div class="category-overlay">
+                    <div class="category-name">Wide Leg Silk</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="two pieces.webp" alt="two pieces-ladies-pants">
+                <div class="category-overlay">
+                    <div class="category-name">Two Pieces-Ladies-Pants</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="blazers1.webp" alt="Best Blazers For Ladies">
+                <div class="category-overlay">
+                    <div class="category-name">Blazers</div>
+                </div>
+            </div>
+            <div class="category-card">
+                <img src="bag.webp" alt="Fancy Bag">
+                <div class="category-overlay">
+                    <div class="category-name">Fancy Beach Bag</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Sellers -->
+    <section class="section" id="best-sellers" style="background: var(--light-gray);">
+        <div class="section-title">
+            <h2>Best Sellers</h2>
+            <p>Our most loved pieces</p>
+        </div>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&q=80" alt="Two Piece Set">
+                    <span class="product-badge">Best Seller</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Elegant Two-Piece Set</div>
+                    <div class="product-price">N150,000</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=400&q=80" alt="Bodycon Dress">
+                    <span class="product-badge">New</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Classic Bodycon Dress</div>
+                    <div class="product-price">N120,000</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&q=80" alt="Designer Bag">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Designer Leather Bag</div>
+                    <div class="product-price">N25,000</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="blazers3.webp" alt="Tailored Blazer">
+                    <span class="product-badge">Sale</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Tailored Blazer</div>
+                    <div class="product-price">N190,000 <span class="old">N210,000</span></div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="abaya3.jpg" alt="Simple Abaya Dress">
+                    <span class="product-badge">New</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Simple Abaya Dress</div>
+                    <div class="product-price">N120,000</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="pant2.webp" alt="Work Trousers">
+                    <span class="product-badge">Work Trousers</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Simple Office Trouser</div>
+                    <div class="product-price">N45,000</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="bag1.webp" alt="Heels">
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Newly Arival</div>
+                    <div class="product-price">N30,000</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="two pieces1.jpg" alt="Two Pieces">
+                    <span class="product-badge">Best Seller</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Two Pieces</div>
+                    <div class="product-price">N60,000</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Arrivals -->
+    <section class="section" id="new-arrivals">
+        <div class="section-title">
+            <h2>New Arrivals</h2>
+            <p>Fresh drops for the season</p>
+        </div>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="bag2.webp" alt="Summer Dress">
+                    <span class="product-badge">New</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Fancy Bag</div>
+                    <div class="product-price">N35,000</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="abaya4.webp" alt="Imani Abaya">
+                    <span class="product-badge">New</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Imani Abaya</div>
+                    <div class="product-price">N150,000</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="shirts.webp" alt="Shirt">
+                    <span class="product-badge">New</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Jean Shirt</div>
+                    <div class="product-price">N25,000</div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="pants3.jpg" alt="Palazzo Baggy">
+                    <span class="product-badge">New</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Wide Leg Trousers</div>
+                    <div class="product-price">N35,000</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sale Section -->
+    <section class="section" id="sale" style="background: var(--light-gray);">
+        <div class="section-title">
+            <h2>On Sale</h2>
+            <p>Limited time offers</p>
+        </div>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="blazers4.jpg" alt="Blazer Sale">
+                    <span class="product-badge">Sale</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Oversized Blazer</div>
+                    <div class="product-price">N90,000 <span class="old">N110,000</span></div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&q=80" alt="Tote Bag">
+                    <span class="product-badge">Sale</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Canvas Tote Bag</div>
+                    <div class="product-price">N40,000 <span class="old">N70,000</span></div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="two pieces3.webp" alt="Two Pieces On Sale">
+                    <span class="product-badge">Sale</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Two Pieces</div>
+                    <div class="product-price">N80,000 <span class="old">N120</span></div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="dresses1.jpg" alt="Bodycon On Sale">
+                    <span class="product-badge">Sale</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-name">Bodycon</div>
+                    <div class="product-price">N55,000 <span class="old">N80,000</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter-section">
+        <h3>Join the Sia Family</h3>
+        <p>Subscribe for exclusive offers and early access</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing!');">
+            <input type="email" placeholder="Enter your email" required>
+            <button type="submit">Subscribe</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#">Dresses</a></li>
+                    <li><a href="#">Two-Piece Sets</a></li>
+                    <li><a href="#">Bodycon Dresses</a></li>
+                    <li><a href="#">Maxi Dresses</a></li>
+                    <li><a href="#">Mini Dresses</a></li>
+                    <li><a href="#">Imani Abaya</a></li>
+                    <li><a href="#">Tops & Blouses</a></li>
+                    <li><a href="#">Blazers & Jackets</a></li>
+                    <li><a href="#">Pants & Trousers</a></li>
+                    <li><a href="#">Skirts</a></li>
+                    <li><a href="#">Jeans</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Accessories</h4>
+                <ul>
+                    <li><a href="#">Bags & Purses</a></li>
+                    <li><a href="#">Jewelry</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Beauty</h4>
+                <ul>
+                    <li><a href="#">Skincare</a></li>
+                    <li><a href="#">Makeup</a></li>
+                    <li><a href="#">Fragrance</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Help</h4>
+                <ul>
+                    <li><a href="#">Shipping & Returns</a></li>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Track Order</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Sia. All Rights Reserved. Express Yourself.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Email Button -->
+    <div class="email-float">
+        <a href="mailto:Sia1stop@gmail.com?subject=Hello%20Sia%20Team&body=Hi%20there,%20I%20would%20like%20to%20inquire%20about..." class="email-btn" title="Email Us">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+        </a>
+    </div>
+
+    <script>
+        // ===== SLIDER =====
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function changeSlide(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            showSlide(currentSlide);
+        }
+
+        // Auto-play slider
+        setInterval(() => {
+            changeSlide(1);
+        }, 5000);
+
+        // ===== ANNOUNCEMENT BAR =====
+        function closeAnnouncement() {
+            document.getElementById('announcementBar').style.display = 'none';
+            document.querySelector('.header').style.top = '0';
+        }
+
+        // ===== SIDE MENU =====
+        function openMenu() {
+            document.getElementById('menuOverlay').classList.add('active');
+            document.getElementById('sideMenu').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            document.getElementById('menuOverlay').classList.remove('active');
+            document.getElementById('sideMenu').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function switchTab(tab) {
+            const menuTab = document.getElementById('menuTab');
+            const categoriesTab = document.getElementById('categoriesTab');
+            const tabs = document.querySelectorAll('.side-menu-tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+
+            if (tab === 'menu') {
+                menuTab.classList.add('active');
+                categoriesTab.classList.remove('active');
+                tabs[0].classList.add('active');
+            } else {
+                menuTab.classList.remove('active');
+                categoriesTab.classList.add('active');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // ===== HEADER SCROLL =====
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 50) { 
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.08)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+            lastScroll = currentScroll;
+        });
+    </script>
+
+</body>
+</html>
